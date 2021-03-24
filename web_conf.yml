@@ -1,0 +1,30 @@
+- hosts: all
+  tasks:
+  - name: Mounting /dev/cdrom on /dvd driver
+    mount:
+        path: /dvd
+        src: /dev/cdrom
+        fstype: iso9660
+        state: mounted
+        
+  - name: Installing httpd software
+    package:
+        name: httpd
+        state: present
+        
+  - name: Putting some data in index.html
+    copy:
+        content: "This is Task 11.3 of ARTH"
+        dest: /var/www/html/index.html
+
+  - name: "Changing working port of webserver from 80 to 1234"
+    lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^Listen '
+        insertafter: '^#Listen '
+        line: 'Listen 1234'
+
+  - name: Restarting servies
+    service:
+        name: httpd
+        state: restarted
